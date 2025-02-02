@@ -9,7 +9,7 @@ export default function Home() {
         <h1 className="text-5xl sm:text-6xl font-extrabold mb-6 text-gray-300 animate-fade-in-down tracking-wide">
           <span className="font-cursive text-blue-500">Sanctum </span> of <span className="text-pink-600">Splendors</span>
         </h1>
-        <p className="text-2xl sm:text-4xl font-bold text-gray-400 animate-fade-in-up border border-gray-700 rounded-md shadow-blue-400/40 hover:text-white hover:border-gray-900">
+        <p className="text-2xl sm:text-3xl font-bold text-gray-400 animate-fade-in-up border border-gray-700 rounded-md shadow-blue-400/40 hover:text-white hover:border-gray-900">
           <span className="text-blue-600/80 font-bold">(●'◡'●) </span> 
           GLIMPSES OF US 
           <span className="text-pink-700/80 font-bold"> (❁´◡`❁)</span>
