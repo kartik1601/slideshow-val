@@ -21,6 +21,15 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        if (user.isVerified) {
+            return NextResponse.json(
+                {
+                    message: "User Already Verified",
+                    success: false,
+                },
+            );
+        }
+
         user.isVerified = true;
         user.verifyToken = undefined;
         user.verifyTokenExpiry = undefined;
