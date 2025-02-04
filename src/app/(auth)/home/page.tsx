@@ -9,6 +9,7 @@ import { CldImage } from 'next-cloudinary';
 import { usePathname } from "next/navigation";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 export default function HomePage() {
   const path = usePathname();
@@ -25,7 +26,7 @@ export default function HomePage() {
         toast.error("Failed to fetch images!");
         throw new Error("Failed to fetch images!");
       }
-    } catch (error:any) {
+    } catch (error: any) {
       toast.error(error.message);
       throw new Error(error.message);
     }
@@ -33,59 +34,67 @@ export default function HomePage() {
 
   useEffect(() => {
     const folderName = (path === '/home') ? 'favourites' : 'personal';
-
     fetchImages(folderName);
   }, [path]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-gray-700 via-rose-500 to-orange-400">
-      {/* Main Content */}
-      <div className="pt-24 h-screen flex flex-col">
-        {/* Spotify Player - 1/3 height */}
-        <div className="h-1/3 px-8 pb-8 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-r from-rose-200 via-amber-400 to-rose-200 text-white">
+      <div className="pt-20 flex flex-col items-center justify-center space-y-6">
+        <motion.h1 
+          className="text-5xl font-extrabold tracking-tight"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          Welcome to Our <span className="text-pink-700">Cupid Space</span>
+        </motion.h1>
+        
+        {/* Spotify Player */}
+        <motion.div 
+          className="w-full max-w-lg rounded-2xl shadow-lg"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1 }}
+        >
           <iframe 
             src={`https://open.spotify.com/embed/playlist/7JBNZLL0Pp1Ur1ywcRNDLV?utm_source=generator&autoplay=1`}
-            width="80%" 
+            width="100%" 
             height="152"
-            className="rounded-2xl shadow-xl w-full md:w-[80%]"
+            className="w-full rounded-2xl"
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
             loading="lazy"
           />
-        </div>
+        </motion.div>
 
-        {/* Swiper Slideshow - 2/3 height */}
-        <div className="h-2/3 relative group">
+        {/* Swiper Slideshow */}
+        <motion.div 
+          className="w-full max-w-4xl h-72 relative"
+          initial={{ opacity: 0, scale: 1.1 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1 }}
+        >
           <Swiper
             modules={[Autoplay, Navigation]}
             autoplay={{ delay: 5000, disableOnInteraction: false }}
-            navigation={{
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev',
-            }}
+            navigation={true}
             loop={true}
             className="h-full w-full"
           >
-            {images.map((img:any, index) => (
+            {images.map((img: any, index) => (
               <SwiperSlide key={index}>
                 <div className="flex items-center justify-center h-full">
                   <CldImage
                     src={img.secure_url} 
                     width={400} 
                     height={400}
-                    className="object-cover rounded-2xl shadow-2xl transition-transform duration-700 hover:scale-105"
+                    className="object-cover rounded-2xl shadow-md hover:scale-105 transition-transform duration-700"
                     alt={`Slide ${index+1}`}
                   />
                 </div>
               </SwiperSlide>
             ))}
-            
-            {/* Custom Navigation Arrows */}
-            <div className="swiper-button-prev absolute left-4 top-1/2 z-10 -translate-y-1/2 font-black hover:text-amber-500 transition-all duration-300 opacity-0 group-hover:opacity-100">
-            </div>
-            <div className="swiper-button-next absolute right-4 top-1/2 z-10 -translate-y-1/2 font-black hover:text-emerald-600 transition-all duration-300 opacity-0 group-hover:opacity-100">
-            </div>
           </Swiper>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
