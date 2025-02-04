@@ -39,7 +39,9 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        await sendOtpEmail({ email, otp });
+        const username = user.username;
+
+        await sendOtpEmail({ email, otp, username });
 
         return NextResponse.json(
             {

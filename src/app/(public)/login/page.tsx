@@ -9,7 +9,11 @@ import Image from "next/image";
 export default function LoginPage() {
     const router = useRouter();
 
-    const [user, setUser] = useState({ email: "", password: "", otp: "" });
+    const [user, setUser] = useState({ 
+        email: "", 
+        password: "", 
+        otp: "" 
+    });
     const [otp, setOtp] = useState("");
     const [otpButton, setOtpButton] = useState(false);
     const [verifyButton, setVerifyButton] = useState(false);

@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-export const sendOtpEmail = async ({ email, otp } : any) => {
+export const sendOtpEmail = async ({ email, otp, username } : any) => {
     try {
 
         const transporter = nodemailer.createTransport({
@@ -16,7 +16,7 @@ export const sendOtpEmail = async ({ email, otp } : any) => {
             from: 'kartiku904@gmail.com',
             to: email,
             subject: "OTP Verification",
-            html: `<p><h1>Use the following OTP:</h1> </hr> <h2>${otp}</h2>
+            html: `<p><h1>Hi, ${username}</h1> <h2>Use the following OTP for verification:</h2> </hr> <h3>${otp}</h3>
             </p>`,
         };
 

@@ -10,7 +10,11 @@ const memorySchema = new mongoose.Schema({
         required: [true, 'Please provide the Date.'],
         unique: [true, 'Date should be unique.'],
     },
-    userId: {
+    createdById: {
+        type: String,
+        required: [true, 'Please provide user Id'],
+    }, 
+    updatedById: {
         type: String,
     }
 });
