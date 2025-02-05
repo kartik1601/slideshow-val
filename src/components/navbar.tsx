@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
@@ -41,6 +41,11 @@ export default function Navbar() {
         </Link>
     );
 
+    useEffect(() => {
+        setIsMenuOpen(false);
+        setIsProfileOpen(false);
+    }, [path])
+
     return (
         <nav className="fixed w-full h-14 top-0 z-50 bg-black/70 backdrop-blur-lg border-b border-white/10 shadow-md">
             <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
@@ -69,8 +74,8 @@ export default function Navbar() {
                     </button>
 
                     {isProfileOpen && (
-                        <div className="absolute right-0 mt-2 w-40 bg-black/70 backdrop-blur-lg border border-white/10 rounded-lg shadow-md p-2 flex flex-col">
-                            <Link href="/about" className="px-4 py-4 font-bold text-gray-200 hover:text-blue-500 transition-all hover:scale-105">Profile</Link>
+                        <div className="absolute right-0 mt-2 w-40 bg-black/80 backdrop-blur-lg border border-white/10 rounded-lg shadow-md p-2 flex flex-col">
+                            <Link href="/about" className="px-4 py-4 font-bold text-gray-200 hover:text-white transition-all hover:scale-105">Profile</Link>
                             <button 
                                 onClick={logout} 
                                 className="flex items-center space-x-2 px-4 py-2 text-red-400 hover:text-red-500 transition-all
@@ -86,7 +91,7 @@ export default function Navbar() {
 
             {/* Mobile Navigation Menu */}
             {isMenuOpen && (
-                <div className="w-40 ml-5 md:hidden flex flex-col items-center space-y-6 py-4 rounded-xl bg-black/50 backdrop-blur-lg border-t border-white/10">
+                <div className="w-40 ml-5 md:hidden flex flex-col items-center space-y-6 py-4 rounded-xl bg-black/80 backdrop-blur-lg border-t border-white/10">
                     <NavLink href="/home">HOME</NavLink>
                     <NavLink href="/gallery">GALLERY</NavLink>
                     <NavLink href="/calendar">CALENDAR</NavLink>

@@ -24,17 +24,38 @@ export const sendEmail = async ({ email, emailType, userId } : any) => {
             );
         }
         
+        // const transporter = nodemailer.createTransport({
+        //     host: "sandbox.smtp.mailtrap.io",
+        //     port: 2525,
+        //     auth: {
+        //         user: process.env.MAILTRAP_USER,
+        //         pass: process.env.MAILTRAP_PASS,
+        //     }
+        // });
+                
+        // const transporter = nodemailer.createTransport({
+        //     host: "smtp.resend.com",
+        //     secure: true,
+        //     port: 465,
+        //     auth: {
+        //         user: 'resend',
+        //         pass: process.env.RESEND_API,
+        //     }
+        // });
+        
         const transporter = nodemailer.createTransport({
-            host: "sandbox.smtp.mailtrap.io",
-            port: 2525,
+            service: 'gmail',
+            host: "smtp.gmail.com",
+            secure: true,
+            port: 465,
             auth: {
-                user: process.env.MAILTRAP_USER,
-                pass: process.env.MAILTRAP_PASS,
+                user: process.env.GMAIL_USER,
+                pass: process.env.GMAIL_APP_PASSWORD,
             }
         });
-
+                        
         const mailOptions = {
-            from: 'kartiku904@gmail.com',
+            from: '"SLD-VAL" <kartiku904@gmail.com>',
             to: email,
             subject: emailType === 'VERIFY' ? "Verify your Email" : "Reset your Password",
             html: `<p>Click <a href="${process.env.DOMAIN}/verifyemail?token=${token}">here</a> to ${emailType === 'VERIFY' ? "verify your email" : "reset your password"} or copy paste the link below in your browser.<br> ${process.env.DOMAIN}/verifyemail?token=${token}

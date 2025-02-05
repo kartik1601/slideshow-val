@@ -9,31 +9,32 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function GalleryPage() {
   const path = usePathname();
-  const [images, setImages] = useState([]);
-  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [media, setMedia] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [mediaType, setMediaType] = useState<"images" | "videos">("images");
 
-  const fetchImages = async (folderName: string) => {
+  const fetchMedia = async (folderName: string) => {
     try {
       const res = await axios.post("/api/users/gallery", { folderName });
       if (res.data.success) {
-        setImages(res.data.images);
-        toast.success("Images fetched successfully.");
+        setMedia(res.data.images);
+        toast.success(`${mediaType === "images" ? "Images" : "Videos"} fetched successfully.`);
       } else {
-        toast.error("Failed to fetch images!");
+        toast.error(`Failed to fetch ${mediaType}!`);
       }
-    } catch (error:any) {
+    } catch (error: any) {
       toast.error(error.message);
     }
   };
 
   useEffect(() => {
-    const folderName = path === "/home" ? "favourites" : "personal";
-    fetchImages(folderName);
-  }, [path]);
+    const folderName = mediaType === "images" ? (path === "/home" ? "favourites" : "personal") : "personal-videos";
+    fetchMedia(folderName);
+  }, [path, mediaType]);
 
-  const handleKeyDown = (e:any) => {
+  const handleKeyDown = (e: any) => {
     if (selectedIndex !== null) {
-      if (e.key === "ArrowRight" && selectedIndex < images.length - 1) {
+      if (e.key === "ArrowRight" && selectedIndex < media.length - 1) {
         setSelectedIndex((prev) => prev + 1);
       } else if (e.key === "ArrowLeft" && selectedIndex > 0) {
         setSelectedIndex((prev) => prev - 1);
@@ -55,8 +56,8 @@ export default function GalleryPage() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
       <div className="pt-20 max-w-6xl mx-auto px-4">
-        <h1 className="text-xl text-center italic font-thin font-sans text-slate-500">with you,</h1>
-        <h1 className="text-3xl font-bold text-center">
+      <h1 className="text-xl text-center italic font-thin font-sans text-slate-500">with you,</h1>
+        <h1 className="text-3xl font-bold text-center mb-4">
           <span className="text-red-500">The </span>
           <span className="text-yellow-500">Valley </span>
           <span className="text-green-500">of </span>
@@ -64,59 +65,108 @@ export default function GalleryPage() {
         </h1>
         <hr />
 
-        {/* Upload Button */}
-        <div className="flex justify-center mt-6">
-          <CldUploadButton 
+        {/* Button Group */}
+        <div className="flex justify-between items-center mt-6">
+          <div className="flex gap-4 ml-4">
+            <button
+              className={`px-4 py-2 rounded-full ${mediaType === "images" ? "bg-yellow-500 text-white" : "bg-gray-200"}`}
+              onClick={() => setMediaType("images")}
+            >
+              Images
+            </button>
+            <button
+              className={`px-4 py-2 rounded-full ${mediaType === "videos" ? "bg-red-500 text-white" : "bg-gray-200"}`}
+              onClick={() => setMediaType("videos")}
+            >
+              Videos
+            </button>
+          </div>
+
+          <CldUploadButton
             options={{ multiple: true, sources: ["local", "url", "camera", "google_drive"] }}
             uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME!}
-            className="bg-blue-500 text-white px-5 py-2 flex items-center gap-2 rounded-lg shadow-lg hover:bg-blue-600 transition"
+            className="mr-5 bg-blue-500 text-white px-5 py-2 flex items-center gap-2 rounded-lg shadow-lg hover:bg-blue-600 transition"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14m7-7H5"></path></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 5v14m7-7H5"></path>
+            </svg>
             <span>Upload</span>
           </CldUploadButton>
         </div>
 
-        {/* Image Grid */}
+        {/* Media Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-5">
-          {images.map((img, index) => (
-            <motion.div key={index} className="cursor-pointer overflow-hidden rounded-lg shadow-lg" whileHover={{ scale: 1.05 }}>
-              <CldImage
-                src={img.secure_url}
-                width={200}
-                height={200}
-                className="w-full h-full object-cover aspect-square"
-                alt={`Image ${index + 1}`}
-                onClick={() => setSelectedIndex(index)}
-              />
+          {media.map((item, index) => (
+            <motion.div key={index} className="cursor-pointer overflow-hidden shadow-lg" whileHover={{ scale: 1.05 }}>
+              {mediaType === "images" ? (
+                <CldImage
+                  src={item.secure_url}
+                  width={200}
+                  height={200}
+                  className="w-full h-full object-cover aspect-square"
+                  alt={`Image ${index + 1}`}
+                  onClick={() => setSelectedIndex(index)}
+                />
+              ) : (
+                <video
+                  src={item.secure_url}
+                  className="w-full h-full object-cover aspect-square"
+                  controls
+                  onClick={() => setSelectedIndex(index)}
+                />
+              )}
             </motion.div>
           ))}
         </div>
       </div>
 
-      {/* Image Carousel */}
+      {/* Media Carousel */}
       <AnimatePresence>
         {selectedIndex !== null && (
-          <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-            <motion.img 
-              src={images[selectedIndex].secure_url} 
-              className="max-w-full max-h-[80%] rounded-lg shadow-2xl"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-            />
+          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-lg flex items-center justify-center z-50 px-2">
+            <div className="absolute inset-0 z-0" onClick={() => setSelectedIndex(null)}></div>
+            {mediaType === "images" ? (
+              <motion.img
+                src={media[selectedIndex].secure_url}
+                className="max-w-full max-h-[80%] rounded-lg shadow-2xl z-10"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+              />
+            ) : (
+              <motion.video
+                src={media[selectedIndex].secure_url}
+                className="max-w-full max-h-[80%] rounded-lg shadow-2xl z-10"
+                controls
+                autoPlay
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+              />
+            )}
             {/* Navigation Buttons */}
             {selectedIndex > 0 && (
-              <button onClick={() => setSelectedIndex((prev) => prev - 1)} className="absolute left-5 text-white bg-gray-800 p-2 rounded-full">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedIndex((prev) => prev - 1);
+                }}
+                className="absolute left-5 text-white bg-gray-800 p-3 rounded-full z-20"
+              >
                 <ChevronLeft size={32} />
               </button>
             )}
-            {selectedIndex < images.length - 1 && (
-              <button onClick={() => setSelectedIndex((prev) => prev + 1)} className="absolute right-5 text-white bg-gray-800 p-2 rounded-full">
+            {selectedIndex < media.length - 1 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedIndex((prev) => prev + 1);
+                }}
+                className="absolute right-5 text-white bg-gray-800 p-3 rounded-full z-20"
+              >
                 <ChevronRight size={32} />
               </button>
             )}
-            {/* Close Overlay */}
-            <div className="absolute inset-0" onClick={() => setSelectedIndex(null)}></div>
           </div>
         )}
       </AnimatePresence>

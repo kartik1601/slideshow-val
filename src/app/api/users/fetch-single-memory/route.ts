@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 
         const { date } = reqBody;
 
-        console.log(date);
+        // console.log(date);
 
         if (!date) {
             return NextResponse.json({

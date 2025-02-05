@@ -12,11 +12,13 @@ export default function LoginPage() {
     const [user, setUser] = useState({ 
         email: "", 
         password: "", 
-        otp: "" 
+        otp: ""
     });
+
     const [otp, setOtp] = useState("");
     const [otpButton, setOtpButton] = useState(false);
     const [verifyButton, setVerifyButton] = useState(false);
+    const [isVerifying, setIsVerifying] = useState(false);
     const [disableResend, setDisableResend] = useState(false);
     const [error, setError] = useState(false);
 
@@ -24,9 +26,12 @@ export default function LoginPage() {
         try {
             setVerifyButton(true);
             setDisableResend(true);
-            const otpCode = Math.floor(100000 + Math.random() * 900000);
 
-            const updatedUser = { ...user, otp: otpCode.toString() };
+            const otpCode = (Math.floor(100000 + Math.random() * 900000)).toString();
+
+            const updatedUser = { ...user,
+                otp: otpCode,
+            };
             
             const res = await axios.post("/api/users/otp", updatedUser);
 
@@ -51,15 +56,28 @@ export default function LoginPage() {
 
     const verifyOtp = async () => {
         try {
-            const res = await axios.post("/api/users/login", user);
-            if (res.data.success) {
-                router.push('/home');
-                toast.success("Login Successful");
+            setIsVerifying(true);
+
+            if (otp === user.otp) {
+                const res = await axios.post("/api/users/login", user);
+
+                if (res.data.success) {
+                    router.push('/home');
+                    toast.success("Login Successful");
+                } else {
+                    toast.error("Please try again later.");
+                    throw new Error("Server error.");
+                }
+
             } else {
+                setIsVerifying(false);
                 toast.error("Incorrect OTP.");
+                throw new Error("Incorrect OTP!");
             }
-        } catch (error) {
+        } catch (error:any) {
+            setIsVerifying(false);
             toast.error("Login failed.");
+            throw new Error(error.message);
         }
     };
 
@@ -100,17 +118,18 @@ export default function LoginPage() {
                         <div className="flex flex-col mt-4">
                             <input
                                 type="text"
+                                placeholder="OTP"
                                 inputMode="numeric"
                                 pattern="[0-9]{6}"
                                 maxLength={6}
-                                onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                                className="w-full p-4 border rounded-xl bg-gray-800 text-white border-green-500 focus:border-green-500 focus:ring focus:ring-green-300 transition duration-300"
+                                onChange={(e) => setOtp(e.target.value)}
+                                className="w-full p-4 font-sans font-bold border rounded-xl bg-gray-800 text-white border-green-500 focus:border-green-500 focus:ring focus:ring-green-300 transition duration-300"
                             />
                             <button
                                 onClick={verifyOtp}
-                                className="w-full py-4 mt-4 bg-green-500 text-white font-bold rounded-xl shadow-lg hover:bg-green-600 transform hover:scale-105 transition duration-300 hover:shadow-green-400/50"
+                                className={ (otp.length == 0) ? ('w-full py-4 mt-4 bg-gray-600 font-bold rounded-xl shadow-lg cursor-not-allowed') : (isVerifying ? 'w-full py-4 mt-4 bg-gray-200 text-red-500 font-bold rounded-xl shadow-lg cursor-not-allowed' :  'w-full py-4 mt-4 bg-green-500 text-white font-bold rounded-xl shadow-lg hover:bg-green-600 transform hover:scale-105 transition duration-300 hover:shadow-green-400/50')}
                             >
-                                Verify OTP
+                                {isVerifying ? 'Verifying...' : 'Verify OTP'}
                             </button>
                         </div>
                     )}

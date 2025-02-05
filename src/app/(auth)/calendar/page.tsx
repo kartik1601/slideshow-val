@@ -25,6 +25,29 @@ export default function CalendarPage() {
     memories: [],
   });
 
+  // const fetch = () => {
+  //   let memoryFound = false;
+    
+  //   if (allDates.length > 0) {
+  //     allDates.map((data:any) => {
+  //       if (data.date === date) {
+  //         setMemoryExists(true);
+  //         memoryFound = true;
+  //         setData({
+  //           createdById: data.createdById,
+  //           updatedById: data.updatedById,
+  //           memories: data.data,
+  //         });
+  //         toast.success("Memory Fetched Successfully!");
+  //       }
+  //     })
+  //   }
+
+  //   if (!memoryFound) {
+  //     toast.error("Failed to fetch memory.")
+  //   }
+  // }
+
   const fetchMemory = async () => {
     try {
       setMemoryExists(false);
@@ -53,7 +76,7 @@ export default function CalendarPage() {
     try {
       const res = await axios.post('/api/users/fetch-all-memories');
 
-      console.log(res);
+      // console.log(res);
 
       if (res.data.success) {
         setAllDates(res.data.res);
@@ -74,21 +97,21 @@ export default function CalendarPage() {
   }, [date]);
 
   useEffect(() => {
-    if(path === '/calendar'){
+    if (path === '/calendar') {
       fetchAllDates();
     }
   }, [path]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white flex flex-col items-center">
+    <div className="min-h-screen bg-gradient-to-tr from-gray-900 via-rose-900 to-gray-900 text-white flex flex-col items-center">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="pt-24 flex flex-col md:flex-row items-center w-auto md:w-full max-w-5xl justify-between"
+        className="pt-20 flex flex-col md:flex-row items-center w-auto md:w-full max-w-5xl justify-between"
       >
         <div className="ml-2 md:w-1/2 w-full px-4 md:px-0">
-          <h1 className="text-3xl font-extrabold flex items-center gap-2">
+          <h1 className="text-3xl font-extrabold flex items-center gap-2 justify-center">
             <CalendarIcon className="w-7 h-7 text-rose-500" /> Memories Calendar
           </h1>
 
@@ -96,7 +119,7 @@ export default function CalendarPage() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="mt-6 bg-white/10 backdrop-blur-lg shadow-lg rounded-2xl p-5 w-full max-w-md flex items-center justify-center"
+            className="mt-2 bg-white/5 backdrop-blur-lg shadow-lg rounded-2xl p-5 flex items-center justify-center"
           >
             <Calendar
               onChange={(newDate) => {
@@ -109,7 +132,7 @@ export default function CalendarPage() {
               minDate={new Date(2023, 7, 10)}
               maxDate={new Date(2025, 6, 14)}
               value={date}
-              className="w-full rounded-lg text-black font-extrabold border-none outline shadow-lg p-5 transition-all duration-300"
+              className="w-full rounded-lg text-black font-extrabold shadow-lg p-5 transition-all duration-300"
               tileClassName={({ date }) => {
                 const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
                 return allDates.some(d => d.date.split("T")[0] === formattedDate) 
@@ -124,25 +147,25 @@ export default function CalendarPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-6 w-full max-w-md flex justify-center items-center"
+            className="mt-3 w-full max-w-md flex justify-center items-center"
           >
             <Link
               href="/addmemories"
-              className="flex items-center gap-2 px-4 py-2 bg-rose-500 hover:bg-rose-600 transition duration-300 text-white font-semibold rounded-lg shadow-lg"
+              className="flex items-center gap-2 px-4 py-2 bg-rose-500 hover:bg-rose-700 transition duration-300 text-white font-semibold rounded-lg shadow-lg"
             >
               <PlusCircle className="w-5 h-5" /> Add Memory
             </Link>
           </motion.div>
         </div>
 
-        <div className="mr-2 mb-5 md:w-1/2 w-full px-4 md:px-0 md:pl-5">
+        <div className="ml-5 mb-5 md:w-1/2 w-full px-4 md:px-0 md:pl-5">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
             className="mt-6 w-full max-w-md"
           >
-            <h1 className="text-3xl font-black text-center">Memory Details</h1>
+            <h1 className="text-3xl font-black text-center">💕 Memories We Made 💕</h1>
             <hr />
             {!memoryExists ? (
               <p className="text-gray-300 text-center mt-3">No memory found for this date.</p>
@@ -151,9 +174,9 @@ export default function CalendarPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.6 }}
-                className="bg-gray-700 p-5 rounded-lg mt-4 shadow-md"
+                className="bg-slate-800 p-5 rounded-lg mt-4 shadow-md"
               >
-                <p className="text-sm text-gray-300">
+                <p className="text-sm text-gray-300 text-center">
                   Created by: <span className="font-bold text-white">{data.createdById}</span>
                 </p>
                 
@@ -164,14 +187,14 @@ export default function CalendarPage() {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.4, delay: index * 0.1 }}
-                      className="text-gray-100 bg-gray-800 p-2 rounded-md"
+                      className="text-gray-100 bg-slate-700 p-2 rounded-md"
                     >
                       {msg}
                     </motion.li>
                   ))}
                 </ul>
 
-                <p className="mt-4 text-sm text-gray-300">
+                <p className="mt-4 text-sm text-gray-300 text-center">
                   Updated by: <span className="font-bold text-white">{data.updatedById}</span>
                 </p>
               </motion.div>

@@ -7,33 +7,47 @@ cloudinary.config({
   api_secret: process.env.NEXT_PUBLIC_CLOUD_API_SECRET,
 });
 
-export async function POST(req: NextRequest) {
-    try {
-        const reqBody = await req.json();
-        // Always use await with req.json
+async function fetchAllImages(folderName: string, nextCursor: string | null = null, images: any[] = []) {
+  try {
+    const query = `folder=${folderName}`;
+    
+    // Make API call with pagination support
+    const res = await cloudinary.search
+      .expression(query)
+      .max_results(100)
+      .next_cursor(nextCursor || undefined)
+      .execute();
 
-        const { folderName }:any = reqBody;
+    images.push(...res.resources); // Append results
 
-        if (!folderName) {
-            return NextResponse.json({
-                success:false,
-                message: "Folder name required!",
-                data: folderName,
-            }, {status: 403});
-        }
-
-        const res = await cloudinary.search.expression(folderName).execute();
-
-        return NextResponse.json({
-            success: true,
-            images: res.resources,
-        }, {status: 200});
-
-    } catch (error:any) {
-        return NextResponse.json(
-            {
-                error: error.message,
-            }, {status: 500},
-        );
+    // If there are more images, continue fetching recursively
+    if (res.next_cursor) {
+      return await fetchAllImages(folderName, res.next_cursor, images);
     }
+
+    return images;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const reqBody = await req.json();
+    const { folderName }: any = reqBody;
+
+    if (!folderName) {
+      return NextResponse.json(
+        { success: false, message: "Folder name required!", data: folderName },
+        { status: 403 }
+      );
+    }
+
+    const allImages = await fetchAllImages(folderName);
+
+    return NextResponse.json({ success: true, images: allImages }, { status: 200 });
+
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
