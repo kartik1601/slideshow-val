@@ -15,7 +15,7 @@ export default function About() {
     });
     const [selectedIndex, setSelectedIndex] = useState(0);
 
-    const fetchImage = async (folderName) => {
+    const fetchImage = async (folderName: string) => {
         try {
             const res = await axios.post('/api/users/gallery', { folderName });
             if (res.data.success) {
@@ -24,8 +24,9 @@ export default function About() {
             } else {
                 toast.error('Failed to load profile pictures.');
             }
-        } catch (error) {
+        } catch (error:any) {
             toast.error('Error fetching images');
+            throw new Error(error.message);
         }
     };
 
@@ -41,8 +42,9 @@ export default function About() {
             } else {
                 toast.error('Failed to load user details.');
             }
-        } catch (error) {
+        } catch (error:any) {
             toast.error('Error fetching user details');
+            throw new Error(error.message);
         }
     };
 
