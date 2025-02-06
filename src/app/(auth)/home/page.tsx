@@ -4,23 +4,27 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { CldImage } from 'next-cloudinary';
 import { usePathname } from "next/navigation";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { motion } from "framer-motion";
 
+interface Image {
+  secure_url: string,
+}
+
 export default function HomePage() {
   const path = usePathname();
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<Image[]>([]);
 
   const fetchImages = async (folderName: string) => {
     try {
       const res = await axios.post('/api/users/gallery', { folderName: folderName });
 
       if (res.data.success) {
-        setImages(res.data.images);
+        setImages(res.data.images as Image[]);
         toast.success("Images fetched successfully.");
       } else {
         toast.error("Failed to fetch images!");
@@ -84,7 +88,7 @@ export default function HomePage() {
               <SwiperSlide key={index}>
                 <div className="flex items-center justify-center h-full">
                   <CldImage
-                    src={images[index].secure_url}
+                    src={img.secure_url}
                     width={400}
                     height={400}
                     className="w-[400px] h-[250px]  object-cover overflow-hidden rounded-2xl shadow-md hover:scale-105 transition-transform duration-700"

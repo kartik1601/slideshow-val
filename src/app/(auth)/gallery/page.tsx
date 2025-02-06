@@ -3,13 +3,16 @@ import axios from "axios";
 import { CldImage, CldUploadButton } from "next-cloudinary";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+interface Media {
+  secure_url: string,
+}
+
 export default function GalleryPage() {
-  const path = usePathname();
-  const [media, setMedia] = useState([]);
+  const [images, setImages] = useState<Media[]>([]);
+  const [videos, setVideos] = useState<Media[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [mediaType, setMediaType] = useState<"images" | "videos">("images");
 
@@ -17,27 +20,33 @@ export default function GalleryPage() {
     try {
       const res = await axios.post("/api/users/gallery", { folderName });
       if (res.data.success) {
-        setMedia(res.data.images);
+
+        if (folderName == 'personal') {
+          setImages(res.data.images as Media[]);
+        } else {
+          setVideos(res.data.images as Media[]);
+        }
         toast.success(`${mediaType === "images" ? "Images" : "Videos"} fetched successfully.`);
       } else {
         toast.error(`Failed to fetch ${mediaType}!`);
       }
     } catch (error: any) {
       toast.error(error.message);
+      throw new Error(error.message);
     }
   };
 
   useEffect(() => {
-    const folderName = mediaType === "images" ? (path === "/home" ? "favourites" : "personal") : "personal-videos";
-    fetchMedia(folderName);
-  }, [path, mediaType]);
+    fetchMedia("personal");
+    fetchMedia("personal-videos");
+  }, []);
 
   const handleKeyDown = (e: any) => {
     if (selectedIndex !== null) {
-      if (e.key === "ArrowRight" && selectedIndex < media.length - 1) {
-        setSelectedIndex((prev) => prev + 1);
+      if (e.key === "ArrowRight" && selectedIndex < ((mediaType === 'images') ? images.length - 1 : videos.length - 1)) {
+        setSelectedIndex((prev) => { return prev===null ? null : prev + 1; });
       } else if (e.key === "ArrowLeft" && selectedIndex > 0) {
-        setSelectedIndex((prev) => prev - 1);
+        setSelectedIndex((prev) => { return prev===null ? null : prev - 1; });
       } else if (e.key === "Escape") {
         setSelectedIndex(null);
       }
@@ -96,7 +105,7 @@ export default function GalleryPage() {
 
         {/* Media Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-5">
-          {media.map((item, index) => (
+          {(mediaType === "images" ? images : videos).map((item, index) => (
             <motion.div key={index} className="cursor-pointer overflow-hidden shadow-lg" whileHover={{ scale: 1.05 }}>
               {mediaType === "images" ? (
                 <CldImage
@@ -127,7 +136,7 @@ export default function GalleryPage() {
             <div className="absolute inset-0 z-0" onClick={() => setSelectedIndex(null)}></div>
             {mediaType === "images" ? (
               <motion.img
-                src={media[selectedIndex].secure_url}
+                src={images[selectedIndex].secure_url}
                 className="max-w-full max-h-[80%] rounded-lg shadow-2xl z-10"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -135,7 +144,7 @@ export default function GalleryPage() {
               />
             ) : (
               <motion.video
-                src={media[selectedIndex].secure_url}
+                src={videos[selectedIndex].secure_url}
                 className="max-w-full max-h-[80%] rounded-lg shadow-2xl z-10"
                 controls
                 autoPlay
@@ -149,18 +158,18 @@ export default function GalleryPage() {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  setSelectedIndex((prev) => prev - 1);
+                  setSelectedIndex((prev) => { return prev===null ? null : prev+1; });
                 }}
                 className="absolute left-5 text-white bg-gray-800 p-3 rounded-full z-20"
               >
                 <ChevronLeft size={32} />
               </button>
             )}
-            {selectedIndex < media.length - 1 && (
+            {selectedIndex < ((mediaType === 'images') ? images.length - 1 : videos.length - 1) && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  setSelectedIndex((prev) => prev + 1);
+                  setSelectedIndex((prev) => { return prev===null ? null : prev+1; });
                 }}
                 className="absolute right-5 text-white bg-gray-800 p-3 rounded-full z-20"
               >

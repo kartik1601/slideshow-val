@@ -24,25 +24,6 @@ export const sendEmail = async ({ email, emailType, userId } : any) => {
             );
         }
         
-        // const transporter = nodemailer.createTransport({
-        //     host: "sandbox.smtp.mailtrap.io",
-        //     port: 2525,
-        //     auth: {
-        //         user: process.env.MAILTRAP_USER,
-        //         pass: process.env.MAILTRAP_PASS,
-        //     }
-        // });
-                
-        // const transporter = nodemailer.createTransport({
-        //     host: "smtp.resend.com",
-        //     secure: true,
-        //     port: 465,
-        //     auth: {
-        //         user: 'resend',
-        //         pass: process.env.RESEND_API,
-        //     }
-        // });
-        
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             host: "smtp.gmail.com",

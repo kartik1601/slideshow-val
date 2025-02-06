@@ -1,13 +1,10 @@
 'use client'
 import axios from 'axios';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 export default function VerifyEmail() {
-  const router = useRouter();
-
   const [token, setToken] = useState("");
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState(false);

@@ -7,8 +7,12 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+interface Image {
+    secure_url: string,
+}
+
 export default function About() {
-    const [images, setImages] = useState([]);
+    const [images, setImages] = useState<Image[]>([]);
     const [user, setUser] = useState({
         username: "",
         email: "",
@@ -19,7 +23,7 @@ export default function About() {
         try {
             const res = await axios.post('/api/users/gallery', { folderName });
             if (res.data.success) {
-                setImages(res.data.images);
+                setImages(res.data.images as Image[]);
                 toast.success('Profile pictures loaded successfully');
             } else {
                 toast.error('Failed to load profile pictures.');
@@ -63,7 +67,7 @@ export default function About() {
     };
 
     return (
-        <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-700 text-white p-6'>
+        <div className='pt-20 min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-700 text-white p-6'>
             <motion.div 
                 className='flex flex-col items-center bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md'
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -103,7 +107,7 @@ export default function About() {
                                 <>
                                     {images.length > 0 && (
                                         <CldImage
-                                            src={images[selectedIndex].secure_url}
+                                            src={images[selectedIndex]?.secure_url}
                                             width={200}
                                             height={200}
                                             className='object-cover w-full h-full'
@@ -184,7 +188,7 @@ export default function About() {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.7 }}
                 >
-                    Our Meetup: 11-MAY-2034. Don't Forget!
+                    {`Our Meetup: 11-MAY-2034. Don't Forget!`}
                 </motion.p>
 
             </motion.div>

@@ -9,6 +9,10 @@ import { motion } from "framer-motion";
 import { CalendarIcon, PlusCircle } from "lucide-react";
 import { usePathname } from "next/navigation";
 
+interface Date {
+  date: string,
+}
+
 export default function CalendarPage() {
   const path = usePathname();
 
@@ -18,7 +22,7 @@ export default function CalendarPage() {
   );
 
   const [memoryExists, setMemoryExists] = useState(false);
-  const [allDates, setAllDates] = useState([]);
+  const [allDates, setAllDates] = useState<Date[]>([]);
   const [data, setData] = useState({
     createdById: "",
     updatedById: "",
@@ -69,6 +73,7 @@ export default function CalendarPage() {
     } catch (error: any) {
       setMemoryExists(false);
       toast.error("Error fetching memory");
+      throw new Error(error.message);
     }
   };
 
@@ -79,8 +84,8 @@ export default function CalendarPage() {
       // console.log(res);
 
       if (res.data.success) {
-        setAllDates(res.data.res);
-        console.log(res.data.res);
+        setAllDates(res.data.res as Date[]);
+
         toast.success("Fetched successfully");
       } else {
         toast.error("Problem in Fetching data.");

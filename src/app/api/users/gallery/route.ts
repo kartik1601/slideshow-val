@@ -18,15 +18,14 @@ async function fetchAllImages(folderName: string, nextCursor: string | null = nu
       .next_cursor(nextCursor || undefined)
       .execute();
 
-    images.push(...res.resources); // Append results
+    images.push(...res.resources); 
 
-    // If there are more images, continue fetching recursively
     if (res.next_cursor) {
       return await fetchAllImages(folderName, res.next_cursor, images);
     }
 
     return images;
-  } catch (error) {
+  } catch (error:any) {
     throw new Error(error.message);
   }
 }

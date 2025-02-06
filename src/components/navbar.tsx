@@ -6,7 +6,6 @@ import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Menu, X, User, LogOut } from "lucide-react";
-import Image from "next/image";
 
 export default function Navbar() {
     const router = useRouter();
