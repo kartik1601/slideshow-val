@@ -9,6 +9,9 @@ import Memory from "@/models/memoryModel";
 
     Will fetch all the memories belonging to {date-month-year}
 */
+
+export const maxDuration = 60;
+
 export async function POST(req: NextRequest) {
     try {
         const reqBody = await req.json();

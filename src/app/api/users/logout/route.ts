@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 
 connect();
 
+export const maxDuration = 60;
+
 export async function GET() {
     try {
         const res = NextResponse.json(

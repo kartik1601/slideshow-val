@@ -2,6 +2,8 @@ import { getTokenData } from "@/helpers/getTokenData";
 import Memory from "@/models/memoryModel";
 import { NextRequest, NextResponse } from "next/server";
 
+export const maxDuration = 60;
+
 export async function POST(req: NextRequest) {
     try {
         const isAuth = getTokenData(req);

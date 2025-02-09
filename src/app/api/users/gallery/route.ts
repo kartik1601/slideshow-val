@@ -7,7 +7,9 @@ cloudinary.config({
   api_secret: process.env.NEXT_PUBLIC_CLOUD_API_SECRET,
 });
 
-async function fetchAllImages(folderName: string, nextCursor: string | null = null, images: any[] = []) {
+export const maxDuration = 60;
+
+export async function fetchAllImages(folderName: string, nextCursor: string | null = null, images: any[] = []) {
   try {
     const query = `folder=${folderName}`;
     

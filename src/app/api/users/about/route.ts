@@ -5,6 +5,8 @@ import { getTokenData } from '@/helpers/getTokenData';
 
 connect();
 
+export const maxDuration = 60;
+
 export async function POST(req: NextRequest) {
     try {
         const userId = await getTokenData(req);
