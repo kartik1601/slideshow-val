@@ -9,11 +9,10 @@ cloudinary.config({
 
 export const maxDuration = 60;
 
-export async function fetchAllImages(folderName: string, nextCursor: string | null = null, images: any[] = []) {
+async function fetchAllImages(folderName: string, nextCursor: string | null = null, images: any[] = []) {
   try {
     const query = `folder=${folderName}`;
     
-    // Make API call with pagination support
     const res = await cloudinary.search
       .expression(query)
       .max_results(100)
