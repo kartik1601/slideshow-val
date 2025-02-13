@@ -16,6 +16,7 @@ const titles: Record<string, string> = {
   "/calendar": "Calendar",
   "/addmemories": "Add Memory",
   "/about": "Profile",
+  "/chat": "Chat",
 };
 
 export default function RootLayout({
@@ -34,7 +35,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <title>{pageTitle}</title>
-        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
       </head>
       <body className={inter.className}>{children}</body>
     </html>

@@ -36,6 +36,7 @@
     "react-hot-toast": "^2.5.1",
     "react-player": "^2.16.0",
     "resend": "^4.1.1",
+    "stream-chat-react": "^12.12.0",
     "swiper": "^11.2.1",
     "tls": "^0.0.1"
   },
