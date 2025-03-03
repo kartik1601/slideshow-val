@@ -15,7 +15,7 @@ export default function GalleryPage() {
   const [videos, setVideos] = useState<Media[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [mediaType, setMediaType] = useState<"images" | "videos">("images");
-  const [uploadPreset, setUploadPreset] = useState("");
+  const [uploadPreset, setUploadPreset] = useState("images");
 
   const fetchMedia = async (folderName: string) => {
     try {
@@ -43,7 +43,7 @@ export default function GalleryPage() {
   }, []);
 
   useEffect(() => {
-    if (mediaType == "images") {
+    if (mediaType === "images") {
       setUploadPreset("images");
     } else {
       setUploadPreset("videos");
