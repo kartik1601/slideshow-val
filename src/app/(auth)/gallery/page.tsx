@@ -102,7 +102,7 @@ export default function GalleryPage() {
 
           <CldUploadButton
             options={{ multiple: true, sources: ["local", "url", "camera", "google_drive"] }}
-            uploadPreset={ uploadPreset! }
+            uploadPreset={ uploadPreset || 'images'}
             className="mr-5 bg-blue-500 text-white px-5 py-2 flex items-center gap-2 rounded-lg shadow-lg hover:bg-blue-600 transition"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
