@@ -1,13 +1,7 @@
-import Head from 'next/head'
 import React from 'react'
 
-export default function page () {
+export default function Chat () {
   return (
-    <div>
-        <Head>
-            <link rel="icon" href="/favicon.ico" />
-        </Head>    
-        page
-    </div>
+    <div>page</div>
   )
 }
