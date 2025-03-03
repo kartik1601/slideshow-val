@@ -5,7 +5,7 @@ import User from "@/models/userModel";
 
 connect();
 
-export const maxDuration = 60;
+export const maxDuration = 20;
 
 export async function POST(req: NextRequest) {
     try {
