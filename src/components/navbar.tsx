@@ -60,7 +60,6 @@ export default function Navbar() {
                         <NavLink href="/home">HOME</NavLink>
                         <NavLink href="/gallery">GALLERY</NavLink>
                         <NavLink href="/calendar">CALENDAR</NavLink>
-                        <NavLink href="/chat">CHAT</NavLink>
                     </div>
                 </div>
 
@@ -95,7 +94,6 @@ export default function Navbar() {
                     <NavLink href="/home">HOME</NavLink>
                     <NavLink href="/gallery">GALLERY</NavLink>
                     <NavLink href="/calendar">CALENDAR</NavLink>
-                    <NavLink href="/chat">CHAT</NavLink>
                 </div>
             )}
         </nav>
