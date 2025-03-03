@@ -15,7 +15,6 @@ export default function GalleryPage() {
   const [videos, setVideos] = useState<Media[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [mediaType, setMediaType] = useState<"images" | "videos">("images");
-  const [uploadPreset, setUploadPreset] = useState("images");
 
   const fetchMedia = async (folderName: string) => {
     try {
@@ -41,14 +40,6 @@ export default function GalleryPage() {
     fetchMedia("personal");
     fetchMedia("personal-videos");
   }, []);
-
-  useEffect(() => {
-    if (mediaType === "images") {
-      setUploadPreset("images");
-    } else {
-      setUploadPreset("videos");
-    }
-  }, [mediaType]);
 
   const handleKeyDown = (e: any) => {
     if (selectedIndex !== null) {
@@ -102,7 +93,7 @@ export default function GalleryPage() {
 
           <CldUploadButton
             options={{ multiple: true, sources: ["local", "url", "camera", "google_drive"] }}
-            uploadPreset={ uploadPreset }
+            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME!}
             className="mr-5 bg-blue-500 text-white px-5 py-2 flex items-center gap-2 rounded-lg shadow-lg hover:bg-blue-600 transition"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

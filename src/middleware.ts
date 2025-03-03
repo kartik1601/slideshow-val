@@ -27,7 +27,6 @@ export const config = {
         '/gallery',
         '/calendar',
         '/addmemories',
-        '/about',
-        '/chat'
+        '/about'
     ],
 }
